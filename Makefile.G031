@@ -1,0 +1,33 @@
+# -*- mode: makefile-gmake; -*-
+#
+# MSW-MKan - abgeleitet von rcmultiswitchG030/Makefile.G031 (Wilhelm Meier,
+# WMuCpp). Einziger Unterschied zum Original: Zieldateiname msw_mkan statt
+# msw30, weil dieses Projekt eine eigene .cc-Datei (msw_mkan.cc) hat.
+#
+# st-flash --reset --connect-under-reset write msw_mkan.bin 0x8000000
+
+CPU = cortex-m0plus
+
+CPPFLAGS += -I../../include_stm32
+CPPFLAGS += -I../../../STM32CubeG0/Drivers/CMSIS/Core/Include
+CPPFLAGS += -I../../../STM32CubeG0/Drivers/CMSIS/Device/ST/STM32G0xx/Include
+CPPFLAGS += -I../../../STM32CubeG0/Drivers/STM32G0xx_HAL_Driver/Inc
+CPPFLAGS += -DSTM32G031xx
+
+weact : CPPFLAGS += -DHW_WEACT
+
+OPTFLAGS = -Os
+
+LDSCRIPT = link_g031.ld
+LOADLIBES += startup_g031.o system_g0.o
+
+targets += startup_g031.o
+targets += system_g0.o
+targets += msw_mkan.elf msw_mkan.bin
+targets += system031
+
+system031: system_g0.o startup_g031.o
+
+weact: clean system031 msw_mkan.bin
+
+-include ../../Makefile.arm.include

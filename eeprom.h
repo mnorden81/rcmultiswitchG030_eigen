@@ -1,0 +1,176 @@
+/*
+ * WMuCpp - Bare Metal C++
+ * Copyright (C) 2019 - 2026 Wilhelm Meier <wilhelm.wm.meier@googlemail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// ---------------------------------------------------------------------------
+// Abgeleitet von rcmultiswitchG030/eeprom.h (Wilhelm Meier).
+// Aenderung fuer MSW-MKan (2026, fuer Martin Norden):
+//  - Dritte CRSF-Adresse "MKan" ergaenzt (analog zur vorhandenen "Virtual"-
+//    Adresse, aber mit eigener Bedeutung: sie waehlt eine zweite
+//    Parameter-Konfiguration je Ausgang statt mehrere Ausgaenge zu buendeln).
+//  - EEProm::Output um eine zweite Parameter-Gruppe (blink2/on2/off2/count2)
+//    erweitert. PWM-Grundeinstellungen (pwm/pwmDuty/pwmScale) bleiben je
+//    Ausgang EINMAL vorhanden und gelten fuer beide Konfigurationen.
+// Die Adress-Aufloesung in rc/crsf_2.h (SwitchDecoder) ist unveraendert
+// generisch (std::find ueber addresses) und musste NICHT angepasst werden.
+// ---------------------------------------------------------------------------
+
+#pragma once
+
+#define EEPROM_MAGIC 42
+
+#include "etl/algorithm.h"
+
+#include "pattern.h"
+
+struct EEProm {
+    constexpr EEProm() {
+        etl::copy("Output 0", outputs[0].name);
+        etl::copy("Output 1", outputs[1].name);
+        etl::copy("Output 2", outputs[2].name);
+        etl::copy("Output 3", outputs[3].name);
+        etl::copy("Output 4", outputs[4].name);
+        etl::copy("Output 5", outputs[5].name);
+        etl::copy("Output 6", outputs[6].name);
+        etl::copy("Output 7", outputs[7].name);
+#ifdef USE_MORSE
+        etl::copy("SOS", morse_texts[0]);
+#endif
+    }
+    struct Output {
+        uint8_t pwm = 0;
+        uint8_t pwmDuty = 1;
+        uint8_t pwmScale = 0;
+
+        // Konfiguration 1: aktiv, wenn der Ausgang ueber die "Switch"-Adresse
+        // angesteuert wird.
+        uint8_t blink = 0;
+        uint8_t blinkOnTime = 1;
+        uint8_t blinkOffTime = 2;
+        uint8_t flashCount = 1;
+
+#ifdef USE_MKAN
+        // Konfiguration 2: aktiv, wenn derselbe Ausgang ueber die "MKan"-
+        // Adresse (zusaetzliche Kanal-Quelle) angesteuert wird.
+        uint8_t blink2 = 0;
+        uint8_t blinkOnTime2 = 1;
+        uint8_t blinkOffTime2 = 2;
+        uint8_t flashCount2 = 1;
+#endif
+
+#ifdef USE_SLAVE_COMMAND
+        uint8_t slaveEnable = 0;
+#endif
+        std::array<char, 16> name;
+    };
+
+    uint8_t magic = EEPROM_MAGIC;
+
+    uint8_t pwm1 = 10;
+    uint8_t pwm2 = 10;
+    uint8_t pwm3 = 10;
+    uint8_t pwm4 = 10;
+
+#if defined(USE_VIRTUALS) || defined(USE_PATTERNS) || defined(USE_MKAN)
+    struct AdrIndex {
+        static inline constexpr uint8_t Switch  = 0;
+#if defined(USE_VIRTUALS) || defined(USE_PATTERNS)
+        static inline constexpr uint8_t Virtual = 1;
+# ifdef USE_MKAN
+        static inline constexpr uint8_t MKan    = 2;
+# endif
+#elif defined(USE_MKAN)
+        static inline constexpr uint8_t MKan    = 1;
+#endif
+    };
+# if (defined(USE_VIRTUALS) || defined(USE_PATTERNS)) && defined(USE_MKAN)
+    std::array<uint8_t, 3> addresses = {0, 1, 2};
+# else
+    std::array<uint8_t, 2> addresses = {0, 1};
+# endif
+#else
+    struct AdrIndex {
+        static inline constexpr uint8_t Switch  = 0;
+    };
+    std::array<uint8_t, 1> addresses = {0};
+#endif
+
+    uint8_t crsf_address = 0xc8;
+
+#ifdef USE_RESPONSE_SLOT
+    uint8_t response_slot = 8;
+#else
+    uint8_t response_slot = 0;
+#endif
+#ifdef USE_TELEMETRY
+    uint8_t telemetry = 1;
+#else
+    uint8_t telemetry = 0;
+#endif
+#if defined(HW_MSW11) || defined(HW_MSW12)
+    uint8_t cells_id = 1;
+    uint8_t temp_id = 1;
+#endif
+#ifdef USE_VIRTUALS
+    uint8_t use_virtuals = 1;
+#endif
+    std::array<Output, 8> outputs{};
+#ifdef USE_MORSE
+#if defined(HW_MSW12) || defined(HW_MSW12_G051)
+    std::array<std::array<char, 16>, 4> morse_texts{};
+#else
+    std::array<std::array<char, 16>, 1> morse_texts{};
+#endif
+    uint8_t morse_dit = 3;
+    uint8_t morse_dah = 6;
+    uint8_t morse_gap = 3;
+    uint8_t morse_igap = 3;
+    uint8_t morse_wgap = 9;
+#endif
+
+#ifdef USE_VIRTUALS
+    struct Virtual {
+        std::array<uint8_t, 4> member{};
+    };
+    std::array<Virtual, 4> virtuals{};
+# ifdef USE_PWM_GLOBAL_MODULATION
+    uint8_t enableGlobalDimming_virtual4 = 0;
+# endif
+#endif
+#ifdef USE_PATTERNS
+	struct Pattern {
+		uint8_t type = 0;
+		std::array<uint8_t, 8> member{1, 2, 3, 4, 5, 6, 7, 8};
+		uint8_t onTime = 33; // time 10 ms
+		uint8_t offTime = 1;
+		uint8_t next_address = 3; // next multiswitch's virtual address
+		uint8_t group = 1;
+	};
+    std::array<External::Pattern::EEProm, 4> pattern{};
+#endif
+
+#ifdef USE_SLAVE_COMMAND
+    uint8_t slaveSend = 0;
+    uint8_t master = 0;
+#endif
+
+#ifdef USE_FAILSAFE
+    uint8_t failsafe_mode    = 0; // 0: hold; 1: all_off, 2: set
+    std::array<uint8_t, 8> failsafe_pattern = {0}; // on/off if mode == 2
+#endif
+};
+static_assert(sizeof(EEProm) < 2048);
