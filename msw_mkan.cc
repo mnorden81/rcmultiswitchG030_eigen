@@ -18,7 +18,7 @@
 
 // ---------------------------------------------------------------------------
 // MSW-MKan - eigenstaendiges Projekt, abgeleitet von rcmultiswitchG030/msw30.cc
-// (Wilhelm Meier, WMuCpp) fuer Martin Norden, 2026.
+// (Wilhelm Meier, WMuCpp) fuer PiperPilot, 2026.
 //
 // Ziel: CRSF/ELRS-Multiswitch mit einer zusaetzlichen Kanal-Quelle ("MKan"),
 // die je Ausgang eine ZWEITE Blink-Konfiguration aktiviert - komplett per
