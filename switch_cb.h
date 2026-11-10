@@ -18,7 +18,7 @@
 
 // ---------------------------------------------------------------------------
 // Abgeleitet von rcmultiswitchG030/switch_cb.h (Wilhelm Meier).
-// Aenderung fuer MSW-MKan (2026, fuer Martin Norden):
+// Aenderung fuer MSW-MKan (2026, fuer PiperPilot):
 //  - setIndex() bekommt einen dritten Zweig fuer AdrIndex::MKan.
 //  - Bevor ein Ausgang geschaltet wird, wird die passende Parameter-
 //    Konfiguration (1 oder 2) in das zugehoerige BlinkerWithPwm-Objekt

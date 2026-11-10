@@ -18,7 +18,7 @@
 
 // ---------------------------------------------------------------------------
 // Abgeleitet von rcmultiswitchG030/crsf_cb.h (Wilhelm Meier).
-// Aenderung fuer MSW-MKan (2026, fuer Martin Norden):
+// Aenderung fuer MSW-MKan (2026, fuer PiperPilot):
 //  - "MKan Addr" Parameter im Global-Menu ergaenzt (zweite CRSF-Adresse).
 //  - addOutput<>() um eine zweite, flache Parameter-Gruppe
 //    ("Intervall Mode 2/on 2/off 2/count 2") je Ausgang erweitert.

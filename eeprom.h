@@ -18,7 +18,7 @@
 
 // ---------------------------------------------------------------------------
 // Abgeleitet von rcmultiswitchG030/eeprom.h (Wilhelm Meier).
-// Aenderung fuer MSW-MKan (2026, fuer Martin Norden):
+// Aenderung fuer MSW-MKan (2026, fuer PiperPilot):
 //  - Dritte CRSF-Adresse "MKan" ergaenzt (analog zur vorhandenen "Virtual"-
 //    Adresse, aber mit eigener Bedeutung: sie waehlt eine zweite
 //    Parameter-Konfiguration je Ausgang statt mehrere Ausgaenge zu buendeln).
