@@ -19,6 +19,10 @@ Wegen des Lua-Budgets (123 von 132 Einträgen) sind Morse, Pattern, Virtuals, Sl
 
 ## Bauen und Flashen
 
+Dieses Projekt ist **kein** Arduino-Sketch. Es gibt keine fertige Firmware-Datei im Repo und keinen automatischen Build bei GitHub, die Datei `msw_mkan.bin` muss einmal selbst gebaut werden. Danach wird sie mit einem ST-Link-Programmer auf das WeAct-Board geschrieben.
+
+### 1. Firmware bauen (`msw_mkan.bin`)
+
 Das Projekt braucht den WMuCpp-Baum, weil die Pfade relativ sind. Der Ordner liegt als Geschwister von `rcmultiswitchG030`:
 
 ```
@@ -29,14 +33,49 @@ Das Projekt braucht den WMuCpp-Baum, weil die Pfade relativ sind. Der Ordner lie
 └── rcmultiswitchG030_mkan/     (dieses Repo)
 ```
 
-Toolchain: `arm-none-eabi-gcc`, GNU Make, STM32CubeG0 (als `../../../STM32CubeG0`).
+Toolchain: `arm-none-eabi-gcc`, GNU Make, STM32CubeG0 (als `../../../STM32CubeG0`). Unter Windows am einfachsten in WSL (Ubuntu). Im Ordner dieses Repos:
 
 ```
 make weact
-st-flash --reset --connect-under-reset write msw_mkan.bin 0x8000000
 ```
 
-Testbuild mit GCC 13.2: ca. 26 KB von 64 KB Flash.
+Ergebnis: `msw_mkan.bin` (Testbuild mit GCC 13.2: ca. 26 KB von 64 KB Flash). Hinweis zu GCC 13 siehe [Offene Punkte](#offene-punkte).
+
+### 2. Flashen mit STM32CubeProgrammer (Windows, ohne Kommandozeile)
+
+**Einmalig einrichten**
+
+1. **STM32CubeProgrammer** von st.com herunterladen und installieren (kostenlos, Anmeldung bei ST nötig). Der ST-Link-Treiber wird mit installiert.
+2. Einen **ST-Link** (z. B. ST-Link V2 oder Clone) bereitlegen.
+
+**Verkabeln** (ST-Link → WeAct STM32G031F8, SWD-Stiftleiste am Board):
+
+| ST-Link | WeAct-Board |
+|---|---|
+| 3.3V | 3V3 |
+| GND | GND |
+| SWDIO | DIO (SWDIO) |
+| SWCLK | CLK (SWCLK) |
+| RST (nur falls nötig, siehe unten) | NRST / R |
+
+Das Board dabei **nicht** gleichzeitig über den Empfänger mit 5 V versorgen, oder 3.3V vom ST-Link weglassen und nur GND, SWDIO, SWCLK verbinden.
+
+**Flashen**
+
+1. ST-Link in den USB-Port stecken, STM32CubeProgrammer starten.
+2. Rechts oben **ST-LINK** auswählen, **Connect** klicken. Unten im Log steht dann die erkannte Device ID (STM32G03x/G04x).
+3. Links auf das Symbol **Erasing & Programming** (zweites Symbol, Pfeil nach unten) klicken.
+4. Bei **File path** mit **Browse** die Datei `msw_mkan.bin` wählen, **Start address** `0x08000000`.
+5. Haken bei **Verify programming** und **Run after programming** setzen, dann **Start Programming** klicken.
+6. Meldung „File download complete“ abwarten, oben rechts **Disconnect** klicken, ST-Link abziehen. Fertig.
+
+**Wenn „Connect“ nicht klappt** („No STM32 target found“): RST-Leitung anschließen und rechts unter **Mode** „Under reset“ wählen, dann erneut **Connect**.
+
+**Alternativ per Kommandozeile** (stlink-tools):
+
+```
+st-flash --reset --connect-under-reset write msw_mkan.bin 0x8000000
+```
 
 ## Stand
 
