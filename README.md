@@ -4,7 +4,7 @@ CRSF-Multiswitch mit 8 Ausgängen für das WeAct-Board **STM32G031F8**. Abgeleit
 
 Neu gegenüber dem Original ist eine dritte CRSF-Adresse **„MKan“**: Ist ein Ausgang über die MKan-Adresse eingeschaltet, nutzt er eine zweite, unabhängige Blink-Konfiguration. Alles ist über das CRSF-Lua-Menü am Sender einstellbar.
 
-Projektbeschreibung als Word-Dokument: [`docs/Projektbeschreibung.docx`](docs/Projektbeschreibung.docx) · Entwicklungsnotizen: [`README_MKAN.md`](README_MKAN.md)
+Projektbeschreibung als Word-Dokument: [`docs/Projektbeschreibung.docx`](docs/Projektbeschreibung.docx) · Entwicklungsnotizen: [`docs/Entwicklung.md`](docs/Entwicklung.md) · Versionen: [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Funktionen
 
