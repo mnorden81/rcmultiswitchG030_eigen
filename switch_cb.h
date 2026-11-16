@@ -26,7 +26,7 @@
 //    off_dezi()/flash_count() - dieselben, die auch das LUA-Menu benutzt).
 //    Das Blinker-Framework (blinker.h) selbst wird NICHT veraendert.
 //
-// BUGFIX (nach Martins Test: WM0/Switch zeigte gar keine Wirkung mehr,
+// BUGFIX (nach dem ersten Hardwaretest: WM0/Switch zeigte gar keine Wirkung mehr,
 // nur WM1/MKan):
 // Die urspruengliche Fassung hat bei JEDER eingehenden CRSF-Set-Nachricht
 // (egal ob Switch- oder MKan-Adresse) fuer ALLE 8 Ausgaenge sofort die
