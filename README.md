@@ -6,6 +6,12 @@ Neu gegenüber dem Original ist eine dritte CRSF-Adresse **„MKan“**: Ist ein
 
 Projektbeschreibung als Word-Dokument: [`docs/Projektbeschreibung.docx`](docs/Projektbeschreibung.docx) · Entwicklungsnotizen: [`docs/Entwicklung.md`](docs/Entwicklung.md) · Versionen: [`CHANGELOG.md`](CHANGELOG.md)
 
+## Projektvideo
+
+[![Projektvideo: CRSF-Ökosystem für RC-Modelle (zum Abspielen anklicken)](https://github.com/mnorden81/RC-CRSF-Router-ESP32-S3/raw/main/docs/video/projektvideo-vorschau.jpg)](https://github.com/mnorden81/RC-CRSF-Router-ESP32-S3/blob/main/docs/video/CRSF-Oekosystem_Projektvorstellung.mp4)
+
+Rund zwei Minuten Überblick über das ganze CRSF-Ökosystem: CRSF-Router, Multiswitch, Soundmodule, der ESP-NOW-CRSF-Link mit Funk in den Modulen und die Prüfstände für WebUI und Lua-Menü. Bild anklicken, dann startet das Video auf GitHub. Das Video liegt im Repo [RC-CRSF-Router-ESP32-S3](https://github.com/mnorden81/RC-CRSF-Router-ESP32-S3/tree/main/docs/video), weil es alle Module gemeinsam zeigt.
+
 ## Funktionen
 
 - 8 Ausgänge mit Blink-Modi, Intervallzeiten und Blitz-Anzahl
